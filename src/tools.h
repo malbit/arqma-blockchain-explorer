@@ -209,7 +209,7 @@ get_ouputs_tuple(const transaction& tx);
 vector<txin_to_key>
 get_key_images(const transaction& tx);
 
-
+/*
 bool
 get_payment_id(const vector<uint8_t>& extra,
                crypto::hash& payment_id,
@@ -220,7 +220,7 @@ get_payment_id(const transaction& tx,
                crypto::hash& payment_id,
                crypto::hash8& payment_id8);
 
-
+*/
 inline double
 get_xmr(uint64_t core_amount)
 {
@@ -246,14 +246,14 @@ decode_ringct(const rct::rctSig & rv,
               unsigned int i,
               rct::key & mask,
               uint64_t & amount);
-
+/*
 bool
 decode_ringct(const rct::rctSig & rv,
               const crypto::key_derivation &derivation,
               unsigned int i,
               rct::key & mask,
               uint64_t & amount);
-
+*/
 bool
 url_decode(const std::string& in, std::string& out);
 

@@ -769,7 +769,7 @@ get_key_images(const transaction& tx)
     return key_images;
 }
 
-
+/*
 bool
 get_payment_id(const vector<uint8_t>& extra,
                crypto::hash& payment_id,
@@ -811,7 +811,7 @@ get_payment_id(const transaction& tx,
 {
     return get_payment_id(tx.extra, payment_id, payment_id8);
 }
-
+*/
 
 array<size_t, 5>
 timestamp_difference(uint64_t t1, uint64_t t2)
@@ -915,49 +915,6 @@ decode_ringct(const rct::rctSig& rv,
     }
 
     return decode_ringct(rv, derivation, i, mask, amount);
-}
-
-bool
-decode_ringct(rct::rctSig const& rv,
-              crypto::key_derivation const& derivation,
-              unsigned int i,
-              rct::key& mask,
-              uint64_t& amount)
-{
-    try
-    {
-        crypto::secret_key scalar1;
-
-        crypto::derivation_to_scalar(derivation, i, scalar1);
-
-        switch (rv.type)
-        {
-            case rct::RCTTypeSimple:
-            case rct::RCTTypeSimpleBulletproof:
-                amount = rct::decodeRctSimple(rv,
-                                              rct::sk2rct(scalar1),
-                                              i,
-                                              mask);
-                break;
-            case rct::RCTTypeFull:
-            case rct::RCTTypeFullBulletproof:
-                amount = rct::decodeRct(rv,
-                                        rct::sk2rct(scalar1),
-                                        i,
-                                        mask);
-                break;
-            default:
-                cerr << "Unsupported rct type: " << rv.type << '\n';
-                return false;
-        }
-    }
-    catch (...)
-    {
-        cerr << "Failed to decode input " << i << '\n';
-        return false;
-    }
-
-    return true;
 }
 
 bool
