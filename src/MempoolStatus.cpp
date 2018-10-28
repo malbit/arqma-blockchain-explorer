@@ -94,7 +94,6 @@ MempoolStatus::start_mempool_status_thread()
 }
 
 
-bool
 MempoolStatus::read_mempool()
 {
     rpccalls rpc {deamon_url};
@@ -126,28 +125,40 @@ MempoolStatus::read_mempool()
         // get transaction info of the tx in the mempool
         const tx_info& _tx_info = mempool_tx_info.at(i);
 
-        transaction tx;
-        crypto::hash tx_hash;
-        crypto::hash tx_prefix_hash;
+        crypto::hash mem_tx_hash = null_hash;
 
-        if (!parse_and_validate_tx_from_blob(
-                _tx_info.tx_blob, tx, tx_hash, tx_prefix_hash))
+        if (epee::string_tools::hex_to_pod(_tx_info.id_hash, mem_tx_hash))
         {
-            cerr << "Cant make tx from tx_blob" << endl;
-            return false;
-        }
+            transaction tx;
 
-        mempool_size_kB += _tx_info.blob_size;
+            if (!xmreg::make_tx_from_json(_tx_info.tx_json, tx))
+            {
+                cerr << "Cant make tx from _tx_info.tx_json" << endl;
+                return false;
+            }
 
-        local_copy_of_mempool_txs.push_back(mempool_tx {tx_hash, tx});
+            crypto::hash tx_hash_reconstructed = get_transaction_hash(tx);
 
-        mempool_tx& last_tx = local_copy_of_mempool_txs.back();
+            if (mem_tx_hash != tx_hash_reconstructed)
+            {
+                cerr << "Hash of reconstructed tx from json does not match "
+                        "what we should get!"
+                     << endl;
 
-        // key images of inputs
-        vector<txin_to_key> input_key_imgs;
+                return false;
+            }
 
-        // public keys and xmr amount of outputs
-        vector<pair<txout_to_key, uint64_t>> output_pub_keys;
+            mempool_size_kB += _tx_info.blob_size;
+
+            local_copy_of_mempool_txs.push_back(mempool_tx {tx_hash_reconstructed, tx});
+
+            mempool_tx& last_tx = local_copy_of_mempool_txs.back();
+
+            // key images of inputs
+            vector<txin_to_key> input_key_imgs;
+
+            // public keys and xmr amount of outputs
+            vector<pair<txout_to_key, uint64_t>> output_pub_keys;
 
         // sum xmr in inputs and ouputs in the given tx
         const array<uint64_t, 4>& sum_data = summary_of_in_out_rct(
