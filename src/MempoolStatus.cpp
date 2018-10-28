@@ -131,7 +131,7 @@ MempoolStatus::read_mempool()
         crypto::hash tx_prefix_hash;
 
         if (!parse_and_validate_tx_from_blob(
-                _tx_info.tx_blob, tx, tx_hash, tx_prefix_hash))
+                _tx_info.blob_size, tx, tx_hash, tx_prefix_hash))
         {
             cerr << "Cant make tx from tx_blob" << endl;
             return false;
