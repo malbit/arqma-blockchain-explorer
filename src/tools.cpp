@@ -1003,7 +1003,7 @@ decrypt(const std::string &ciphertext,
     crypto::chacha8_key key;
     crypto::generate_chacha8_key(&skey, sizeof(skey), key);
 
-    const crypto::chacha8_iv &iv = *(const crypto::chacha8_*)&ciphertext[0];
+    const crypto::chacha8_iv &iv = *(const crypto::chacha8_iv*)&ciphertext[0];
 
     std::string plaintext;
 
