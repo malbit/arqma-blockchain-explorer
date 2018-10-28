@@ -238,7 +238,7 @@ pair<string, double>
 timestamps_time_scale(const vector<uint64_t>& timestamps,
                       uint64_t timeN, uint64_t resolution = 80,
                       uint64_t time0 = 1397818193 /* timestamp of the second block */);
-
+/*
 bool
 decode_ringct(const rct::rctSig & rv,
               const crypto::public_key pub,
@@ -246,7 +246,7 @@ decode_ringct(const rct::rctSig & rv,
               unsigned int i,
               rct::key & mask,
               uint64_t & amount);
-/*
+
 bool
 decode_ringct(const rct::rctSig & rv,
               const crypto::key_derivation &derivation,

@@ -895,7 +895,7 @@ timestamps_time_scale(const vector<uint64_t>& timestamps,
 
     return make_pair(empty_time, scale);
 }
-
+/*
 bool
 decode_ringct(const rct::rctSig& rv,
               const crypto::public_key pub,
@@ -916,7 +916,7 @@ decode_ringct(const rct::rctSig& rv,
 
     return decode_ringct(rv, derivation, i, mask, amount);
 }
-
+*/
 bool
 url_decode(const std::string& in, std::string& out)
 {
