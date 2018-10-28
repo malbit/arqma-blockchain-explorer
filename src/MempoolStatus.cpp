@@ -131,9 +131,9 @@ MempoolStatus::read_mempool()
         crypto::hash tx_prefix_hash;
 
         if (!parse_and_validate_tx_from_blob(
-                _tx_info.tx_blob, tx, tx_hash, tx_prefix_hash))
+                tx_blob, tx, tx_hash, tx_prefix_hash))
         {
-            cerr << "Cant make tx from _tx_info.tx_blob" << endl;
+            cerr << "Cant make tx from tx_blob" << endl;
             return false;
         }
 
@@ -172,15 +172,15 @@ MempoolStatus::read_mempool()
 
         last_tx.pID             = '-';
 
-        crypto::hash payment_id;
-        crypto::hash8 payment_id8;
+//        crypto::hash payment_id;
+//        crypto::hash8 payment_id8;
 
-        get_payment_id(tx, payment_id, payment_id8);
+//        get_payment_id(tx, payment_id, payment_id8);
 
-        if (payment_id != null_hash)
-            last_tx.pID = 'l'; // legacy payment id
-        else if (payment_id8 != null_hash8)
-            last_tx.pID = 'e'; // encrypted payment id
+//        if (payment_id != null_hash)
+//            last_tx.pID = 'l'; // legacy payment id
+//        else if (payment_id8 != null_hash8)
+//            last_tx.pID = 'e'; // encrypted payment id
 
        // } // if (hex_to_pod(_tx_info.id_hash, mem_tx_hash))
 
