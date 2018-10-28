@@ -6,7 +6,7 @@
 
 #include "rpccalls.h"
 
-namespace arqeg
+namespace xmreg
 {
 
 using namespace std;
@@ -97,7 +97,7 @@ MempoolStatus::start_mempool_status_thread()
 bool
 MempoolStatus::read_mempool()
 {
-    rpccalls rpc {daemon_url};
+    rpccalls rpc {deamon_url};
 
     string error_msg;
 
@@ -146,18 +146,12 @@ MempoolStatus::read_mempool()
         // key images of inputs
         vector<txin_to_key> input_key_imgs;
 
-        // public keys and arq amount of outputs
+        // public keys and xmr amount of outputs
         vector<pair<txout_to_key, uint64_t>> output_pub_keys;
 
-        // sum arq in inputs and ouputs in the given tx
+        // sum xmr in inputs and ouputs in the given tx
         const array<uint64_t, 4>& sum_data = summary_of_in_out_rct(
                tx, output_pub_keys, input_key_imgs);
-
-
-
-        double tx_size =  static_cast<double>(_tx_info.blob_size)/1024.0;
-
-        double payed_for_kB = ARQ_AMOUNT(_tx_info.fee) / tx_size;
 
         last_tx.receive_time = _tx_info.receive_time;
 
@@ -168,15 +162,15 @@ MempoolStatus::read_mempool()
         last_tx.mixin_no          = sum_data[2];
         last_tx.num_nonrct_inputs = sum_data[3];
 
-        last_tx.fee_str          = arqeg::arq_amount_to_str(_tx_info.fee, "{:0.3f}", false);
-        last_tx.payed_for_kB_str = fmt::format("{:0.4f}", payed_for_kB);
-        last_tx.arq_inputs_str   = arqeg::arq_amount_to_str(last_tx.sum_inputs , "{:0.3f}");
-        last_tx.arq_outputs_str  = arqeg::arq_amount_to_str(last_tx.sum_outputs, "{:0.3f}");
-        last_tx.timestamp_str    = arqeg::timestamp_to_str_gm(_tx_info.receive_time);
+        last_tx.fee_str         = xmreg::xmr_amount_to_str(_tx_info.fee, "{:0.3f}", false);
+        last_tx.xmr_inputs_str  = xmreg::xmr_amount_to_str(last_tx.sum_inputs , "{:0.3f}");
+        last_tx.xmr_outputs_str = xmreg::xmr_amount_to_str(last_tx.sum_outputs, "{:0.3f}");
+        last_tx.timestamp_str   = xmreg::timestamp_to_str_gm(_tx_info.receive_time);
 
-        last_tx.txsize           = fmt::format("{:0.2f}", tx_size);
+        last_tx.txsize          = fmt::format("{:0.2f}",
+                                      static_cast<double>(_tx_info.blob_size)/1024.0);
 
-        last_tx.pID              = '-';
+        last_tx.pID             = '-';
 
         crypto::hash payment_id;
         crypto::hash8 payment_id8;
@@ -187,13 +181,7 @@ MempoolStatus::read_mempool()
             last_tx.pID = 'l'; // legacy payment id
         else if (payment_id8 != null_hash8)
             last_tx.pID = 'e'; // encrypted payment id
-        else if (!get_additional_tx_pub_keys_from_extra(tx).empty())
-        {
-            // if multioutput tx have additional public keys,
-            // mark it so that it represents that it has at least
-            // one sub-address
-            last_tx.pID = 's';
-        }
+
        // } // if (hex_to_pod(_tx_info.id_hash, mem_tx_hash))
 
     } // for (size_t i = 0; i < mempool_tx_info.size(); ++i)
@@ -218,7 +206,7 @@ MempoolStatus::read_mempool()
 bool
 MempoolStatus::read_network_info()
 {
-    rpccalls rpc {daemon_url};
+    rpccalls rpc {deamon_url};
 
     COMMAND_RPC_GET_INFO::response rpc_network_info;
 
@@ -259,28 +247,13 @@ MempoolStatus::read_network_info()
     local_copy.outgoing_connections_count = rpc_network_info.outgoing_connections_count;
     local_copy.incoming_connections_count = rpc_network_info.incoming_connections_count;
     local_copy.white_peerlist_size        = rpc_network_info.white_peerlist_size;
-    local_copy.nettype                    = rpc_network_info.testnet ? cryptonote::network_type::TESTNET : 
-                                            rpc_network_info.stagenet ? cryptonote::network_type::STAGENET : cryptonote::network_type::MAINNET;
+    local_copy.testnet                    = rpc_network_info.testnet;
     local_copy.cumulative_difficulty      = rpc_network_info.cumulative_difficulty;
     local_copy.block_size_limit           = rpc_network_info.block_size_limit;
-    local_copy.block_size_median          = rpc_network_info.block_size_median;
     local_copy.start_time                 = rpc_network_info.start_time;
 
 
-    strncpy(local_copy.block_size_limit_str, fmt::format("{:0.2f}",
-                                             static_cast<double>(
-                                             local_copy.block_size_limit ) / 2.0 / 1024.0).c_str(),
-                                             sizeof(local_copy.block_size_limit_str));
-
-
-    strncpy(local_copy.block_size_median_str, fmt::format("{:0.2f}",
-                                              static_cast<double>(
-                                              local_copy.block_size_median) / 1024.0).c_str(),
-                                              sizeof(local_copy.block_size_median_str));
-
-    epee::string_tools::hex_to_pod(rpc_network_info.top_block_hash,
-                                   local_copy.top_block_hash);
-
+    epee::string_tools::hex_to_pod(rpc_network_info.top_block_hash, local_copy.top_block_hash);
     local_copy.fee_per_kb                 = fee_estimated;
     local_copy.info_timestamp             = static_cast<uint64_t>(std::time(nullptr));
 
@@ -316,13 +289,13 @@ MempoolStatus::is_thread_running()
     return is_running;
 }
 
-bf::path MempoolStatus::blockchain_path {"/home/arqma/.arqma/lmdb"};
-string MempoolStatus::daemon_url {"127.0.0.1:19994"};
-cryptonote::network_type MempoolStatus::nettype {cryptonote::network_type::MAINNET};
+bf::path MempoolStatus::blockchain_path {"~/.edollar/lmdb"};
+string MempoolStatus::deamon_url {"http:://139.99.106.122:33031"};
+bool   MempoolStatus::testnet {false};
 atomic<bool>       MempoolStatus::is_running {false};
 boost::thread      MempoolStatus::m_thread;
 Blockchain*        MempoolStatus::core_storage {nullptr};
-arqeg::MicroCore*  MempoolStatus::mcore {nullptr};
+xmreg::MicroCore*  MempoolStatus::mcore {nullptr};
 vector<MempoolStatus::mempool_tx> MempoolStatus::mempool_txs;
 atomic<MempoolStatus::network_info> MempoolStatus::current_network_info;
 atomic<uint64_t> MempoolStatus::mempool_no {0};   // no of txs

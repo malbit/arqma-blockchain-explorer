@@ -2,15 +2,15 @@
 // Created by mwo on 5/11/15.
 //
 
-#ifndef ARQEG01_MICROCORE_H
-#define ARQEG01_MICROCORE_H
+#ifndef EDLEG01_MICROCORE_H
+#define EDLEG01_MICROCORE_H
 
 #include <iostream>
 
-#include "arqma_headers.h"
+#include "edollar_headers.h"
 #include "tools.h"
 
-namespace arqeg
+namespace xmreg
 {
     using namespace cryptonote;
     using namespace crypto;
@@ -30,8 +30,6 @@ namespace arqeg
 
         tx_memory_pool m_mempool;
         Blockchain m_blockchain_storage;
-
-        hw::device* m_device;
 
     public:
         MicroCore();
@@ -69,8 +67,6 @@ namespace arqeg
         string
         get_blkchain_path();
 
-        hw::device* const
-        get_device() const;
 
         virtual ~MicroCore();
     };
@@ -88,4 +84,4 @@ namespace arqeg
 
 
 
-#endif //ARQEG01_MICROCORE_H
+#endif //EDLEG01_MICROCORE_H

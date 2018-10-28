@@ -3,10 +3,10 @@
 //
 
 
-#ifndef CROWARQ_RPCCALLS_H
-#define CROWARQ_RPCCALLS_H
+#ifndef CROWXMR_RPCCALLS_H
+#define CROWXMR_RPCCALLS_H
 
-#include "arqma_headers.h"
+#include "edollar_headers.h"
 
 #include <mutex>
 #include <utility>
@@ -47,8 +47,8 @@ struct has_destructor
 
 namespace cryptonote
 {
-// declare struct in ArQmA's cryptonote namespace.
-// arqma should provide definition for this,
+// declare struct in monero's cryptonote namespace.
+// monero should provide definition for this,
 // but we need to have it declared as we are going to
 // check if its definition exist or not. depending on this
 // we decide what gets to be defined as
@@ -56,7 +56,7 @@ namespace cryptonote
 struct COMMAND_RPC_GET_ALT_BLOCKS_HASHES;
 }
 
-namespace arqeg
+namespace xmreg
 {
 
 using namespace cryptonote;
@@ -67,7 +67,7 @@ using namespace std;
 
 class rpccalls
 {
-    string daemon_url ;
+    string deamon_url ;
     uint64_t timeout_time;
 
     std::chrono::milliseconds timeout_time_ms;
@@ -81,11 +81,11 @@ class rpccalls
 
 public:
 
-    rpccalls(string _daemon_url = "https://blockexplorer.arqma.com",
+    rpccalls(string _deamon_url = "http:://139.99.106.122:33031",
              uint64_t _timeout = 200000);
 
     bool
-    connect_to_arqma_daemon();
+    connect_to_monero_deamon();
 
     uint64_t
     get_current_height();
@@ -130,9 +130,9 @@ public:
         {
             std::lock_guard<std::mutex> guard(m_daemon_rpc_mutex);
 
-            if (!connect_to_arqma_daemon())
+            if (!connect_to_monero_deamon())
             {
-                cerr << "get_alt_blocks: not connected to daemon" << endl;
+                cerr << "get_alt_blocks: not connected to deamon" << endl;
                 return false;
             }
 
@@ -156,15 +156,15 @@ public:
 
             if (!err.empty())
             {
-                cerr << "Error connecting to ArQmA daemon due to "
+                cerr << "Error connecting to eDollar deamon due to "
                      << err << endl;
                 return false;
             }
         }
         else
         {
-            cerr << "Error connecting to ArQmA daemon at "
-                 << daemon_url << endl;
+            cerr << "Error connecting to eDollar deamon at "
+                 << deamon_url << endl;
             return false;
         }
 
@@ -193,4 +193,4 @@ public:
 
 
 
-#endif //CROWARQ_RPCCALLS_H
+#endif //CROWXMR_RPCCALLS_H

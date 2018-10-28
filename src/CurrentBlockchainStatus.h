@@ -2,16 +2,20 @@
 // Created by mwo on 16/05/17.
 //
 
-#ifndef ARQBLOCKS_CURRENTBLOCKCHAINSTATUS_H
-#define ARQBLOCKS_CURRENTBLOCKCHAINSTATUS_H
+#ifndef EDLBLOCKS_CURRENTBLOCKCHAINSTATUS_H
+#define EDLBLOCKS_CURRENTBLOCKCHAINSTATUS_H
 
-#include "mstch/mstch.hpp"
-#include "arqma_headers.h"
 #include "MicroCore.h"
 
 #include <boost/algorithm/string.hpp>
 
-namespace arqeg
+#include <iostream>
+#include <memory>
+#include <thread>
+#include <mutex>
+#include <atomic>
+
+namespace xmreg
 {
 
 using namespace std;
@@ -36,24 +40,18 @@ struct CurrentBlockchainStatus
         operator
         std::string() const
         {
-            return to_string(blk_no) + ","
-                 + to_string(coinbase) + ","
-                 + to_string(fee) + ","
-                 + to_string(checksum());
+            return to_string(blk_no) + "," + to_string(coinbase)
+                   + "," + to_string(fee) + "," + to_string(checksum());
         }
     };
 
-    static uint64_t circulating_supply;
-    static uint64_t circulating_supply_calc_from_height;
-    static bool     circulating_supply_is_accurate;
-
     static bf::path blockchain_path;
 
-    static cryptonote::network_type nettype;
+    static bool testnet;
 
     static string output_file;
 
-    static string daemon_url;
+    static string deamon_url;
 
     // how many blocks to read before thread goes to sleep
     static uint64_t blockchain_chunk_size;
@@ -113,4 +111,4 @@ struct CurrentBlockchainStatus
 
 }
 
-#endif //ARQBLOCKS_CURRENTBLOCKCHAINSTATUS_H
+#endif //EDLBLOCKS_CURRENTBLOCKCHAINSTATUS_H

@@ -5,7 +5,7 @@ project(myxrm)
 set(SOURCE_HEADERS
         MicroCore.h
 		tools.h
-		arqma_headers.h
+		edollar_headers.h
 		CurrentBlockchainStatus.h)
 
 set(SOURCE_FILES

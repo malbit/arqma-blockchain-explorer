@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 set(PROJECT_NAME
-        arqblocks)
+        edlblocks)
 
 
 project(${PROJECT_NAME})
@@ -15,30 +15,30 @@ if (WIN32)
 endif()
 
 
-if (NOT ARQMA_DIR)
-    set(ARQMA_DIR ~/arqma)
+if (NOT EDL_DIR)
+    set(EDL_DIR ~/edollar)
 endif()
 
-message(STATUS ARQMA_DIR ": ${ARQMA_DIR}")
+message(STATUS EDL_DIR ": ${EDL_DIR}")
 
-set(ARQMA_SOURCE_DIR ${ARQMA_DIR}
-        CACHE PATH "Path to the root directory for ArQmA")
+set(EDL_SOURCE_DIR ${EDL_DIR}
+        CACHE PATH "Path to the root directory for eDollar")
 
-# set location of arqma build tree
-set(ARQMA_BUILD_DIR ${ARQMA_SOURCE_DIR}/build/release/
-        CACHE PATH "Path to the build directory for ArQmA")
+# set location of eDollar build tree
+set(EDL_BUILD_DIR ${EDL_SOURCE_DIR}/build/release/
+        CACHE PATH "Path to the build directory for Edollar")
 
 set(MY_CMAKE_DIR "${CMAKE_CURRENT_LIST_DIR}/cmake"
         CACHE PATH "The path to the cmake directory of the current project")
 
 list(APPEND CMAKE_MODULE_PATH "${MY_CMAKE_DIR}")
 
-set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "${ARQMA_BUILD_DIR}"
-        CACHE PATH "Add ArQmA directory for library searching")
+set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "${EDL_BUILD_DIR}"
+        CACHE PATH "Add eDollar directory for library searching")
 
 include(MyUtils)
 
-find_package(Arqma)
+find_package(edollar)
 
 # find boost
 find_package(Boost COMPONENTS
@@ -64,7 +64,7 @@ endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin" OR WIN32)
     add_library(unbound STATIC IMPORTED)
-    set_property(TARGET unbound PROPERTY IMPORTED_LOCATION ${ARQMA_BUILD_DIR}/external/unbound/libunbound.a)
+    set_property(TARGET unbound PROPERTY IMPORTED_LOCATION ${MONERO_BUILD_DIR}/external/unbound/libunbound.a)
 endif()
 
 # include boost headers
@@ -105,20 +105,16 @@ set(LIBRARIES
         cryptonote_core
         cryptonote_protocol
         cryptonote_basic
-        multisig
         daemonizer
         cncrypto
         lmdb
         ringct
-        ringct_basic
-        device
         common
         mnemonics
         easylogging
         checkpoints
         version
         epee
-        pcsclite
         ${Boost_LIBRARIES}
         pthread
         unbound
@@ -127,7 +123,7 @@ set(LIBRARIES
         ssl)
 
 if(APPLE)
-    set(LIBRARIES ${LIBRARIES} "-framework IOKit -framework PCSC")
+    set(LIBRARIES ${LIBRARIES} "-framework IOKit")
 else()
     set(LIBRARIES ${LIBRARIES} atomic)
 endif()

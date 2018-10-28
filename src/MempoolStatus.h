@@ -2,8 +2,8 @@
 // Created by mwo on 28/05/17.
 //
 
-#ifndef ARQBLOCKS_MEMPOOLSTATUS_H
-#define ARQBLOCKS_MEMPOOLSTATUS_H
+#ifndef EDLBLOCKS_MEMPOOLSTATUS_H
+#define EDLBLOCKS_MEMPOOLSTATUS_H
 
 
 #include "MicroCore.h"
@@ -16,7 +16,7 @@
 #include <mutex>
 #include <atomic>
 
-namespace arqeg
+namespace xmreg
 {
 
 struct MempoolStatus
@@ -38,9 +38,8 @@ struct MempoolStatus
         uint64_t mixin_no {0};
 
         string fee_str;
-        string payed_for_kB_str;
-        string arq_inputs_str;
-        string arq_outputs_str;
+        string xmr_inputs_str;
+        string xmr_outputs_str;
         string timestamp_str;
         string txsize;
 
@@ -67,13 +66,10 @@ struct MempoolStatus
         uint64_t incoming_connections_count  {0};
         uint64_t white_peerlist_size  {0};
         uint64_t grey_peerlist_size  {0};
-        cryptonote::network_type nettype {cryptonote::network_type::MAINNET};
+        bool testnet {false};
         crypto::hash top_block_hash;
         uint64_t cumulative_difficulty  {0};
         uint64_t block_size_limit  {0};
-        uint64_t block_size_median  {0};
-        char block_size_limit_str[10];   // needs to be trivially copyable
-        char block_size_median_str[10];  // std::string is not trivially copyable
         uint64_t start_time  {0};
         uint64_t current_hf_version {0};
 
@@ -122,8 +118,8 @@ struct MempoolStatus
     static atomic<uint64_t> mempool_size; // size in bytes.
 
     static bf::path blockchain_path;
-    static string daemon_url;
-    static cryptonote::network_type nettype;
+    static string deamon_url;
+    static bool testnet;
 
     // make object for accessing the blockchain here
     static MicroCore* mcore;
@@ -161,4 +157,4 @@ struct MempoolStatus
 };
 
 }
-#endif //ARQBLOCKS_MEMPOOLSTATUS_H
+#endif //EDLBLOCKS_MEMPOOLSTATUS_H

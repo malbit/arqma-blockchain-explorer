@@ -2,8 +2,8 @@
 // Created by mwo on 6/11/15.
 //
 
-#ifndef ARQEG01_CMDLINEOPTIONS_H
-#define ARQEG01_CMDLINEOPTIONS_H
+#ifndef EDLEG01_CMDLINEOPTIONS_H
+#define EDLEG01_CMDLINEOPTIONS_H
 
 #include <iostream>
 #include <string>
@@ -11,7 +11,7 @@
 #include <boost/program_options.hpp>
 #include <boost/optional.hpp>
 
-namespace arqeg
+namespace xmreg
 {
 
     using namespace std;
@@ -34,4 +34,4 @@ namespace arqeg
 }
 
 
-#endif //ARQEG01_CMDLINEOPTIONS_H
+#endif //XMREG01_CMDLINEOPTIONS_H

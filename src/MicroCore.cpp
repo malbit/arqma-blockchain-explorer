@@ -10,12 +10,12 @@ namespace
 {
     // NOTE: These values should match blockchain.cpp
     // TODO: Refactor
-    const uint64_t mainnet_hard_fork_version_1_till = 100;
-    const uint64_t testnet_hard_fork_version_1_till = 100;
+    const uint64_t mainnet_hard_fork_version_1_till = 4009826;
+    const uint64_t testnet_hard_fork_version_1_till = 624633;
 }
 
 
-namespace arqeg
+namespace xmreg
 {
 /**
  * The constructor is interesting, as
@@ -32,9 +32,7 @@ namespace arqeg
 MicroCore::MicroCore():
         m_mempool(m_blockchain_storage),
         m_blockchain_storage(m_mempool)
-{
-    m_device = &hw::get_device("default");
-}
+{}
 
 
 /**
@@ -90,7 +88,7 @@ MicroCore::init(const string& _blockchain_path)
 
     // initialize Blockchain object to manage
     // the database.
-    return m_blockchain_storage.init(db, m_hardfork, network_type::MAINNET);
+    return m_blockchain_storage.init(db, m_hardfork, false);
 }
 
 /**
@@ -173,7 +171,7 @@ MicroCore::get_tx(const string& tx_hash_str, transaction& tx)
     // parse tx hash string to hash object
     crypto::hash tx_hash;
 
-    if (!arqeg::parse_str_secret_key(tx_hash_str, tx_hash))
+    if (!xmreg::parse_str_secret_key(tx_hash_str, tx_hash))
     {
         cerr << "Cant parse tx hash: " << tx_hash_str << endl;
         return false;
@@ -358,12 +356,6 @@ string
 MicroCore::get_blkchain_path()
 {
     return blockchain_path;
-}
-
-hw::device* const
-MicroCore::get_device() const
-{
-    return m_device;
 }
 
 }

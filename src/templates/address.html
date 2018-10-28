@@ -1,18 +1,15 @@
 
 <div>
     <br/>
-    <H4 style="margin:5px">Address:<br/>{{arq_address}}</H4>
+    <H4 style="margin:5px">Address:<br/>{{xmr_address}}</H4>
     <br/>
 
     {{#testnet}}
-        <H4 style="margin:5px">Network type: Testnet</H4>
+        <H4 style="margin:5px">Testnet address: Yes</H4>
     {{/testnet}}
-    {{#stagenet}}
-        <H4 style="margin:5px">Network type: Stagenet</H4>
-    {{/stagenet}}
-    {{^testnet}}{{^stagenet}}
-        <H4 style="margin:5px">Network type: Mainnet</H4>
-    {{/stagenet}}{{/testnet}}
+    {{^testnet}}
+        <H4 style="margin:5px">Testnet address: No</H4>
+    {{/testnet}}
 
     <br/>
     <H4 style="margin:5px">Associated public keys</H4>
@@ -28,11 +25,10 @@
 
     <H4 style="margin:5px">
         Transactions:<br/> Sorry, its not possible to find txs associated with
-        normal addresses in ArQmA
+        normal addresses in eDollar
     </H4>
 
     <br/>
 
 </div>
 <br/>
-

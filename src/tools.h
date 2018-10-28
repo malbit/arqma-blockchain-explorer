@@ -2,12 +2,12 @@
 // Created by mwo on 5/11/15.
 //
 
-#ifndef ARQEG01_TOOLS_H
-#define ARQEG01_TOOLS_H
+#ifndef EDLEG01_TOOLS_H
+#define EDLEG01_TOOLS_H
 
 #define PATH_SEPARARTOR '/'
 
-#define ARQ_AMOUNT(value) \
+#define XMR_AMOUNT(value) \
     static_cast<double>(value) / 1e9
 
 #define REMOVE_HASH_BRAKETS(a_hash) \
@@ -15,7 +15,7 @@
 
 
 
-#include "arqma_headers.h"
+#include "edollar_headers.h"
 
 #include "../ext/fmt/ostream.h"
 #include "../ext/fmt/format.h"
@@ -38,7 +38,7 @@
  * Names are rather self-explanatory, so I think
  * there is no reason for any detailed explanations here
  */
-namespace arqeg
+namespace xmreg
 {
 
 using namespace cryptonote;
@@ -101,14 +101,14 @@ get_tx_pub_key_from_str_hash(Blockchain& core_storage,
 bool
 parse_str_address(const string& address_str,
                   address_parse_info& address_info,
-                  cryptonote::network_type nettype = cryptonote::network_type::MAINNET);
+                  bool testnet = false);
 
 inline bool
 is_separator(char c);
 
 string
 print_address(const address_parse_info& address,
-              cryptonote::network_type nettype = cryptonote::network_type::MAINNET);
+              bool testnet = false);
 
 string
 print_sig (const signature& sig);
@@ -127,7 +127,7 @@ operator<< (ostream& os, const address_parse_info& addr_info);
 
 
 string
-get_default_lmdb_folder(cryptonote::network_type nettype = cryptonote::network_type::MAINNET);
+get_default_lmdb_folder(bool testnet = false);
 
 bool
 generate_key_image(const crypto::key_derivation& derivation,
@@ -139,7 +139,7 @@ generate_key_image(const crypto::key_derivation& derivation,
 bool
 get_blockchain_path(const boost::optional<string>& bc_path,
                     bf::path& blockchain_path,
-                    cryptonote::network_type nettype = cryptonote::network_type::MAINNET);
+                    bool testnet = false);
 
 uint64_t
 sum_money_in_outputs(const transaction& tx);
@@ -222,9 +222,9 @@ get_payment_id(const transaction& tx,
 
 
 inline double
-get_arq(uint64_t core_amount)
+get_xmr(uint64_t core_amount)
 {
-    return ARQ_AMOUNT(core_amount);
+    return  static_cast<double>(core_amount) / 1e9;
 }
 
 array<size_t, 5>
@@ -273,7 +273,7 @@ get_tx_pub_key_from_received_outs(const transaction &tx);
 
 static
 string
-arq_amount_to_str(const uint64_t& arq_amount,
+xmr_amount_to_str(const uint64_t& xmr_amount,
                   string _format="{:0.9f}",
                   bool zero_to_question_mark=true)
 {
@@ -281,13 +281,13 @@ arq_amount_to_str(const uint64_t& arq_amount,
 
     if (!zero_to_question_mark)
     {
-        amount_str = fmt::format(_format, ARQ_AMOUNT(arq_amount));
+        amount_str = fmt::format(_format, XMR_AMOUNT(xmr_amount));
     }
     else
     {
-        if (arq_amount > 0 && zero_to_question_mark == true)
+        if (xmr_amount > 0 && zero_to_question_mark == true)
         {
-            amount_str = fmt::format(_format, ARQ_AMOUNT(arq_amount));
+            amount_str = fmt::format(_format, XMR_AMOUNT(xmr_amount));
         }
     }
 
@@ -331,14 +331,14 @@ void chunks(Iterator begin,
     }
     while(std::distance(chunk_begin,end) > 0);
 }
-    
+
 /*
  * Remove all characters in in_str that match the given
  * regular expression
  */
 template <typename T>
 inline string
-remove_bad_chars(T&& in_str, std::regex const& rgx = std::regex ("[^a-zA-Z0-9+/=]"))
+remove_bad_chars(T&& in_str, std::regex const& rgx = std::regex ("[^a-zA-Z0-9]"))
 {
     return std::regex_replace(std::forward<T>(in_str), rgx, "");
 }
@@ -370,9 +370,6 @@ calc_median(It it_begin, It it_end)
 void
 pause_execution(uint64_t no_seconds, const string& text = "now");
 
-string
-make_comma_sep_number(uint64_t value);
-
 }
 
-#endif //ARQEG01_TOOLS_H
+#endif //XMREG01_TOOLS_H
